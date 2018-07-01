@@ -1,14 +1,26 @@
 # nest-storage
 An ethereum smart contract / node.js webapp interface for a wallet with multiple keys and circuit breakers
 
-Libraries to use:
+## Libraries
 
-Web3js: https://github.com/ethereum/web3.js/
+Interfacing with ethereum: [Web3.js](https://github.com/ethereum/web3.js/)
 
 server: node.js
 
-structure: https://expressjs.com/
+structure: [express.js](https://expressjs.com/)
 
-Hosting:
+## Hosting
 
-AWS? Filecoin/Storj/
+* centralized
+  * Heroku
+  * AWS
+  * Google Cloud
+  * Azure
+* decentralized
+  * IPFS (Filecoin?)
+  * Storj
+  * Golem
+
+## Stretch Goals
+
+* Consider integration with interledger to allow multi chain payments
