@@ -24,3 +24,7 @@ structure: [express.js](https://expressjs.com/)
 ## Stretch Goals
 
 * Consider integration with interledger to allow multi chain payments
+
+## Problem Sketch
+
+See Google Doc [here](https://docs.google.com/document/d/19iJj_yeZFZUAkpj-uLYf6jnhhN6G0fLBbJUZ3fqpvh4/edit?usp=sharing)
