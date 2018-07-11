@@ -29,7 +29,7 @@ var config = {
     },
     plugins: [
         new HtmlWebPackPlugin({
-        template: "./frontend/index.html",
+        template: "./frontend/htmls/index.html",
         filename: "./index.html"
       })
     ]
