@@ -1,11 +1,15 @@
 pragma solidity ^0.4.23;
 
-contract Wallet {
+/* 
+ If/when we start using engima, this will become a secret contract.
+
+*/
+
+contract UserAccount {
     address public owner;
-    uint public balance;
 
     constructor() public {
         owner = msg.sender;
-        balance = 0;
     }
+
 }

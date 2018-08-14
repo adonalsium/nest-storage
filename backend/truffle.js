@@ -11,16 +11,23 @@
  *     gasPrice: 10000000000,
  *   },
  */
+var mnemonic = "baccarat cuticula sodomy copperas furthest armorer clear didymium count eclosion scrunch firedog";
+var HDWalletProvider = require("truffle-hdwallet-provider");
+var path = require('path');
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // for more about customizing your Truffle configuration!
-  contracts_build_directory: "../build/contracts",
+  contracts_build_directory: path.join(__dirname, "../build/contracts"),
   networks: {
       development: {
           host: "127.0.0.1",
           port: 8545,
-          network_id: "*" // Match any network id
+          network_id: "1" // Match any network id
       },
+      rinkeby : {
+        provider: new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/0f456a90ed1e44068ae25defcec99b03"),
+        network_id: "2" // Match any networkid
+    }
   }
-};
+}

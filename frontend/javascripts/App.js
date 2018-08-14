@@ -1,131 +1,73 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { default as Web3} from 'web3';
+import { default as TruffleContract} from 'truffle-contract';
+import { default as TruffleHDWallet} from 'truffle-hdwallet-provider';
+import ProtectedEthContainerArtifacts from "../../build/contracts/ProtectedEthContainer.json";
 import '../stylesheets/index.css';
 
-function Square(props) {
+const mnemonic = "baccarat cuticula sodomy copperas furthest armorer clear didymium count eclosion scrunch firedog";
+
+function convertStringToArrayBufferView(str) {
+    var bytes = new Uint8Array(str.length);
+    for (var iii = 0; iii < str.length; iii++){
+        bytes[iii] = str.charCodeAt(iii);
+    }
+    return bytes;
+}
+
+function convertArrayBufferViewtoString(buffer){
+    var str = "";
+    for (var iii = 0; iii < buffer.byteLength; iii++){
+        str += String.fromCharCode(buffer[iii]);
+    }
+    return str;
+}
+
+class Account extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      balance : 0,
+      provider: new TruffleHDWallet(mnemonic, "https://rinkeby.infura.io/v3/0f456a90ed1e44068ae25defcec99b03"),
+      cryptoKey : null
+    }
+
+    this.web3 = new Web3(this.state.provider);
+    //this.ethContainer = TruffleContract(ProtectedEthContainerArtifacts);
+    //this.ethContainer.setProvider(web3.currentProvider);
+  }
+  
+  componentWillMount(){
+    const password = 'humayun23king';
+    const pwUtf8 = convertStringToArrayBufferView(password);
+    console.log(password);
+    window.crypto.subtle.digest({name: 'SHA-256'}, pwUtf8).then((pwHash) => {
+      console.log(pwHash);
+      return window.crypto.subtle.importKey("raw", pwHash, {name: 'AES-CBC'}, false, ['encrypt', 'decrypt'])
+    }).then((key) => {
+      console.log(key);
+      this.cyptoKey = key;
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+
+  render() {
     return (
-        <button 
-            className="square" 
-            onClick={() => props.onClick()}
-        >
-            {props.value}
-        </button>
+      <div className="game-info">
+        {this.web3.eth.accounts._provider.addresses[0]}
+        {this.state.cryptoKey}
+      </div>
     );
   }
 
-function calculateWinner(squares) {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
-      }
-    }
-    return null;
-  }
-  
-  class Board extends React.Component {
-    renderSquare(i) {
-      return (
-        <Square 
-            value={this.props.squares[i]}
-            onClick={() => this.props.onClick(i)}
-        />
-      );
-    }
-  
-    render() {
-      return (
-        <div>
-          <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-          </div>
-        </div>
-      );
-    }
-  }
-  
-  class Game extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            history: [{
-                squares: Array(9).fill(null),
-            }],
-            xIsNext : true,
-        };
-    }
-
-    handleClick(i) {
-      const history = this.state.history;
-      const current = history[history.length-1];
-      const squares = current.squares.slice();
-
-      if (squares[i] || calculateWinner(squares)) {
-        return;
-        }
-      squares[i] = this.state.xIsNext ? 'X' : 'O';
-      this.setState({
-        history: history.concat([{
-            squares: squares
-        }]),
-        xIsNext: !this.state.xIsNext,
-      });
-    }
-
-    render() {
-      const history = this.state.history;
-      const current = history[history.length - 1];
-      const winner = calculateWinner(current.squares);
-
-      let status;
-      if (winner) {
-          status = 'Winner: ' + winner;
-      } else {
-          status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-      }
-
-      return (
-        <div className="game">
-          <div className="game-board">
-            <Board 
-                squares={current.squares}
-                onClick={(i) => this.handleClick(i)}
-            />
-          </div>
-          <div className="game-info">
-            <div>{status}</div>
-            <ol>{/* TODO */}</ol>
-          </div>
-        </div>
-      );
-    }
-  }
+}
   
   // ========================================
   
   ReactDOM.render(
-    <Game />,
+    <Account />,
     document.getElementById('root')
   );
