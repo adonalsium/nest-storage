@@ -1,11 +1,30 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
     margin: 20px;
+    background-color: rgb(61, 31, 231);
   }
   
   ol, ul {
     padding-left: 30px;
   }
+
+  table {
+    border-collapse: collapse;
+    background-color: white;
+  }
+
+  table, th, td {
+    border: 1px solid black;
+ }
+
+th {
+  height : 25px;
+  text-align: left;
+}
+
+td {
+  width : 500px;
+}
   
   .board-row:after {
     clear: both;
