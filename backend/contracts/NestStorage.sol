@@ -11,14 +11,14 @@ contract NestStorage {
 
     constructor() public {
         owner = msg.sender;
-        registry[owner] = [0x085AF49B437CD0cd9318155aFe2Ec8de84b18066];
+        registry[owner] = [0x085AF49B437CD0cd9318155aFe2Ec8de84b18066, 0xa57e3502CA9a1C04627292203379ad4AAa8436bc];
     }
 
-    function addContainerForUser(address container) public {
-        registry[msg.sender].push(container);
+    function addContainerForUser(address _container) public {
+        registry[msg.sender].push(_container);
     }
 
-    function getContainersForUser() public view returns ( address[] ) {
-        return registry[msg.sender];
+    function getContainersForUser(address _user) public view returns ( address[] ) {
+        return registry[_user];
     }
 }

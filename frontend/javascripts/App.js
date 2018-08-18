@@ -14,6 +14,8 @@ const NestStorage = TruffleContract(NestStorageArtifact);
 
 const mnemonic = "baccarat cuticula sodomy copperas furthest armorer clear didymium count eclosion scrunch firedog";
 
+const WEI_TO_ETHER = 1/1000000000000000000;
+
 function convertStringToArrayBufferView(str) {
     var bytes = new Uint8Array(str.length);
     for (var iii = 0; iii < str.length; iii++){
@@ -80,19 +82,19 @@ class Account extends React.Component {
     }
   }
 
-  componentDidMount(){
+  componentWillMount(){
+    let addresses;
     this.getEthContainerAddresses()
       .then((ethContainerAddresses) => {
+        addresses = ethContainerAddresses;
         return this.getBalances(ethContainerAddresses);
       })
-      .then((results) => {
-        let ethContainerAddresses = results[0];
-        let balances = results[1];
+      .then((balances) => {
 
         let containers = [];
-        for(let i = 0; i < ethContainerAddresses; i++){
+        for(let i = 0; i < addresses.length; i++){
           containers.push({
-            address: ethContainerAddresses[i],
+            address: addresses[i],
             balance: balances[i],
           });
         }
@@ -106,7 +108,7 @@ class Account extends React.Component {
   }
 
   async getEthContainerAddresses(){
-    const ethContainerAddresses = await this.props.nestStorageInstance.getContainersForUser({gas: 140000});
+    const ethContainerAddresses = await this.props.nestStorageInstance.getContainersForUser(this.props.web3.eth.accounts._provider.addresses[0]);
     console.log(ethContainerAddresses);
     return ethContainerAddresses;
   }
@@ -117,13 +119,13 @@ class Account extends React.Component {
       let balance = await this.props.web3.eth.getBalance(ethContainerAddresses[i]);
       balances.push(balance);
     }
-    return (ethContainerAddresses, balances);
+    return balances;
   }
 
   render(){
     return (
       <div className="Account">
-        <h1> My name is: {this.props.web3.eth.accounts._provider.addresses[0]}</h1>
+        <h1 className="header"> My name is: {this.props.web3.eth.accounts._provider.addresses[0]}</h1>
         <BalanceTable
           containers = {this.state.containers}
         />
@@ -143,20 +145,21 @@ function BalanceTable(props){
       let row = []
 
       let address = props.containers[j].address;
-      let balance = props.containers[j].balance;
+      let balance = props.containers[j].balance * WEI_TO_ETHER;
       row.push(<td key={address.toString()}>{`${address}`}</td>);
-      row.push(<td key={address.toString() + balance.toString()}>{`${balance}`}</td>)
+      row.push(<td key={address.toString() + balance.toString()}>{`${balance}`} ether</td>)
 
       table.push(<tr key = {address.toString()}>{row}</tr>);
     }
 
     return (
-      <div className="game-info">
+      <div className="account-table">
       <table>
         <tbody>
           {table}
         </tbody>
       </table>
+      <button>button</button>
       </div>
     );
 }

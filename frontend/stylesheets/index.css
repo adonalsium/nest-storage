@@ -1,7 +1,7 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
     margin: 20px;
-    background-color: rgb(61, 31, 231);
+    background-color: rgb(60, 43, 207);
   }
   
   ol, ul {
@@ -10,7 +10,7 @@ body {
 
   table {
     border-collapse: collapse;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
   }
 
   table, th, td {
@@ -19,13 +19,18 @@ body {
 
 th {
   height : 25px;
-  text-align: left;
+  text-align: middle;
 }
 
 td {
-  width : 500px;
+  width : 25vw;
+  text-align: middle;
 }
-  
+
+.header {
+  background-color: rgb(255, 255, 255);
+}
+
   .board-row:after {
     clear: both;
     content: "";

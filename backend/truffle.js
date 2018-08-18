@@ -32,7 +32,7 @@ module.exports = {
         },
         network_id: "2", // Match any networkid
         gas: 4000000,
-        gasPrice: 20000000000,
+        gasPrice: 10000000000,
     }
   }
 }
