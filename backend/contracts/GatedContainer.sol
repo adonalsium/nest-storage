@@ -7,6 +7,8 @@ import "./Ownable.sol";
 /// @author Huma Dadachanji and Jake Martin
 /// @notice This is a container for ethereum that can impose a periodically refreshing
 ///           time limit  within an arbitrary, repeating time window
+/// @dev Each container is registred at the NestStorageRegistry singleton contract
+///       at TODO: ADD_REGISTRY_ADDRESS_HERE
 contract GatedContainer is Ownable {
   uint public tokensSpent; //Tracks tokens spent in current time window
   uint public spendingLimit; //Total amount the contract can spend in a single time window
@@ -64,7 +66,9 @@ contract GatedContainer is Ownable {
   }
 
   /// @dev this contract can accept ether
-  function () public payable; 
+  function () public payable {
+    
+  } 
 
   /// @notice Transfers funds to another address. The message sender must be ther owner
   ///           of the container and the amount they want to transfer must be within the

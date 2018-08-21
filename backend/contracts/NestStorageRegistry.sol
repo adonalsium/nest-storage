@@ -12,11 +12,17 @@ contract NestStorageRegistry {
   mapping (address => address[]) public registry;
 
   ///@notice deploys new GatedContainer for user and adds it's address to the registry
-  function addGatedContainerForSender() public {
+  function addGatedContainerForSender() external {
     // TODO: Require that _GatedContainer is actually a GatedContainer
     //        or change logic so that deployment happens here
     GatedContainer container = new GatedContainer();
     container.transferOwnership(msg.sender);
     registry[msg.sender].push(container);
+  }
+
+  ///@param _user the address of the user whose GatedContainers are to be found
+  ///@return array of addresses corresponding to the GateContainers the user owns
+  function getGatedContainersForUser(address _user) public view returns (address[]) {
+    return registry[_user];
   }
 }
