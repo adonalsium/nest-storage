@@ -8,14 +8,15 @@ contract ProtectedEthContainer {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "only the owner can preform this action");
+        require(msg.sender == owner, "only the owner can perform this action");
         _;
     }
 
-    function () payable public {}
+    function () public payable;
 
-    function transferAmount (address _recipient, uint256 amount) public onlyOwner {
-        _recipient.transfer(amount);
+    function transfer (address _recipient, uint256 _amount) public onlyOwner {
+        // TODO: Add Error Handling
+        _recipient.transfer(_amount);
     }
 
     function getBalance() public view returns ( uint256 ) {

@@ -1,5 +1,5 @@
-var ProtectedEthContainer = artifacts.require('./ProtectedEthContainer.sol');
+var NestStorage = artifacts.require('./NestStorage.sol');
 
 module.exports = function(deployer) {
-    deployer.deploy(ProtectedEthContainer);
+    deployer.deploy(NestStorage, {gas: 5000000});
   };
