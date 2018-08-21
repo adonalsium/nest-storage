@@ -19,6 +19,7 @@ module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // for more about customizing your Truffle configuration!
   contracts_build_directory: path.join(__dirname, "../build/contracts"),
+
   networks: {
       development: {
           host: "127.0.0.1",
@@ -26,8 +27,12 @@ module.exports = {
           network_id: "1" // Match any network id
       },
       rinkeby : {
-        provider: new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/0f456a90ed1e44068ae25defcec99b03"),
-        network_id: "2" // Match any networkid
+        provider: function() {
+          return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/0f456a90ed1e44068ae25defcec99b03");
+        },
+        network_id: "2", // Match any networkid
+        gas: 4000000,
+        gasPrice: 20000000000,
     }
   }
 }
