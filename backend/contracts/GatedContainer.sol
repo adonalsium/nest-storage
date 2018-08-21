@@ -5,7 +5,8 @@ import "./Ownable.sol";
 
 /// @title GatedContainer
 /// @author Huma Dadachanji and Jake Martin
-/// @notice This is a container for ethereum that can
+/// @notice This is a container for ethereum that can impose a periodically refreshing
+///           time limit  within an arbitrary, repeating time window
 contract GatedContainer is Ownable {
   uint public tokensSpent; //Tracks tokens spent in current time window
   uint public spendingLimit; //Total amount the contract can spend in a single time window
@@ -28,7 +29,7 @@ contract GatedContainer is Ownable {
     tokensSpent = 0;
     // TODO: What's default ether count?
     spendingLimit = 1;
-    timeWindowStart = block.timestamp;    
+    timeWindowStart = block.timestamp;
     windowLength = 1 days;
     isActive = true; 
   }
@@ -37,25 +38,15 @@ contract GatedContainer is Ownable {
   /// @param _amount the amount the user wants to spend
   modifier withinLimit(uint _amount) {
     // we believe that block.timestamp is secure enough for our use case                  
-    if (!withinWindow()){
-      require(
-        _amount <= spendingLimit,
-        "Transaction Rejected. You're trying to spend " +
-        "more in a single transaction than your whole periodic spending limit. You should " +
-        "batch this transaction over multiple spending periods.");
-    } else {
-      require(
-        tokensSpent + _amount <= spendingLimit,
-        "Transaction Rejected. This " +
-        "transaction would place you over your spending limit.");
-    }
+    require(
+      !withinWindow() || (tokensSpent + _amount <= spendingLimit),
+      "Transaction Rejected: spending limit exceeded.");
     _;
   }
 
-  modifier isActive() {
-    require(isActive, 
-      "This GatedContainer has been deactivated. Please reactivate " +
-      "and try again");
+  modifier active() {
+    require(isActive,  "GatedContainer not active");
+    _;
   }
 
   /// @notice Deactivates the GatedContainer.
@@ -72,14 +63,17 @@ contract GatedContainer is Ownable {
     isActive = true;
   }
 
+  /// @dev this contract can accept ether
+  function () public payable; 
+
   /// @notice Transfers funds to another address. The message sender must be ther owner
   ///           of the container and the amount they want to transfer must be within the
   ///           spending limit.
   /// @dev This function handles the logic of resetting timeWindowStart and tokensSpent                
   /// @param _to the address to tranfer the funds to.
   /// @param _amount the amount ot be transferred  
-  function transferTokens(address _to, uint _amount) public onlyOwner isActive withinLimit(_amount) {
-    if (block.timestamp - timeWindowStart > windowLength){
+  function transferTokens(address _to, uint _amount) public onlyOwner active withinLimit(_amount) {
+    if (block.timestamp - timeWindowStart > windowLength) {
       timeWindowStart = block.timestamp;
       tokensSpent = 0;
     }
@@ -97,7 +91,7 @@ contract GatedContainer is Ownable {
   /// @dev We are currently using block.timestamp but may transition to blockheight
   ///       or a trusted oracle later on.
   /// @return A boolean. True if within window, false otherwise.
-  function withinWindow() internal returns(bool) {
+  function withinWindow() public view returns(bool) {
     return (block.timestamp - timeWindowStart) < windowLength;
   }
 
